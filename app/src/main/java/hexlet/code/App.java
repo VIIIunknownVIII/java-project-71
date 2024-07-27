@@ -13,8 +13,8 @@ public class App implements Callable<Integer> {
 
     @Option(names = {"-n", "--name"}, description = "Your name")
     private String name;
-    @Option(names = {"-f", "--format"}, description = "Your format")
-    private String format;
+    @Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
+    private String format = "stylish";
     @Option(names = {"-g", "--greeting"}, description = "Greeting message")
     private String greeting = "Hello";
 
