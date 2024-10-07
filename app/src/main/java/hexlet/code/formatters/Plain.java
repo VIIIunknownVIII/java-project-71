@@ -18,13 +18,14 @@ public class Plain {
                 case "equal":
                     break;
                 case "added":
-                    result.add("Property '" + key + "' was added with value: " + newValue);
+                    result.add("+ " + key + ": " + newValue);
                     break;
                 case "removed":
-                    result.add("Property '" + key + "' was removed");
+                    result.add("- " + key + ": " + oldValue);
                     break;
                 case "changed":
-                    result.add("Property '" + key + "' was updated. From " + oldValue + " to " + newValue);
+                    result.add("- " + key + ": " + oldValue);
+                    result.add("+ " + key + ": " + newValue);
                     break;
                 default:
                     throw new RuntimeException("\nUnsupported key status: " + status);

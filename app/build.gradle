@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'application'
+    id 'checkstyle'
+    id "jacoco"
 }
 
 group = 'hexlet.code'
@@ -19,9 +21,40 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.1")
 }
 
-
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
 compileJava {
-    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+    options.release = 17
+//    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+    jacoco {
+        enabled = true
+        destinationFile = layout.buildDirectory.file("jacoco/${name}.exec").get().asFile
+        includes = []
+        excludes = []
+        excludeClassLoaders = []
+        includeNoLocationClasses = false
+        sessionId = "db5cdb8223e5c365b028"
+        dumpOnExit = true
+        classDumpDir = null
+        output = JacocoTaskExtension.Output.FILE
+        address = "localhost"
+        port = 6300
+        jmx = false
+    }
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = true
+//        csv.required = true
+//        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }
 
 test {
@@ -30,4 +63,8 @@ test {
 
 application {
     mainClass = 'hexlet.code.App'
+}
+
+checkstyle {
+    toolVersion '10.18.2'
 }
