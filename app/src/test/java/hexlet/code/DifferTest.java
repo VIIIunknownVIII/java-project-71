@@ -1,150 +1,83 @@
 package hexlet.code;
 
-import java.io.File;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static hexlet.code.Differ.generate;
 
-/**
- * Unit tests for the Differ class.
- * This class contains tests to verify the functionality of the
- * generate method for different formats.
- */
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class DifferTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    private final String expectedJsonFormat = """
-                {
-                  - age: 18
-                  + age: 24
-                  + children: false
-                  - marriage: false
-                  + marriage: true
-                    name: Darya
-                  - surname: Selezneva
-                  + surname: Krylova
-                  - www: null
-                }""";
 
-    private final String expectedPlainFormat = """
-                Property 'age' was updated. From 18 to 24
-                Property 'children' was added with value: false
-                Property 'marriage' was updated. From false to true
-                Property 'name' was added with value: 'Darya'
-                Property 'surname' was updated. From 'Selezneva' to 'Krylova'
-                Property 'www' was removed""";
-
+class DifferTest {
     @Test
-    public void generateTestJson() throws Exception {
-        String filePath1 = pathToFullPath("file1.json");
-        String filePath2 = pathToFullPath("file2.json");
-
-        // Замените "plain" на "json" для получения формата, который вам нужен
-        String actual = generate(filePath1, filePath2, "json");
-        System.out.println("Actual result for generateTestJson: " + actual);
-
-        Assertions.assertEquals(expectedJsonFormat, actual);
+    void generateJSONFormatPlain() throws IOException {
+        var actualPlainJson = Differ.generate("src/test/resources/file1.json",
+                "src/test/resources/file2.json", "plain");
+        var resultPlainJson = readFile("src/test/resources/plainResult.txt");
+        assertEquals(actualPlainJson, resultPlainJson);
     }
 
     @Test
-    public void generateTestJsonPlain() throws Exception {
-        String filePath1 = pathToFullPath("file1.json");
-        String filePath2 = pathToFullPath("file2.json");
-
-        String actual = generate(filePath1, filePath2, "plain");
-        System.out.println("Actual result for generateTestJsonPlain: " + actual);
-
-        Assertions.assertEquals(expectedPlainFormat, actual);
+    void generateJsonFormatJson() throws IOException {
+        var actualJsonFormat = Differ.generate("src/test/resources/file1.json",
+                "src/test/resources/file2.json", "json");
+        var resultJsonFormat = readFile("src/test/resources/resultJson.json");
+        assertEquals(actualJsonFormat, resultJsonFormat);
     }
 
     @Test
-    public void generateTestYaml() throws Exception {
-        String filePath1 = pathToFullPath("file3Test.yml");
-        String filePath2 = pathToFullPath("file4Test.yml");
-
-        String actual = generate(filePath1, filePath2, "plain");
-        System.out.println("Actual result for generateTestYaml: " + actual);
-
-        Assertions.assertEquals("", actual); // Ожидаем пустую строку, так как файлы пустые
+    void generate() throws IOException {
+        var actualNewJson2 = Differ.generate("src/test/resources/file1.json",
+                "src/test/resources/file2.json");
+        var resultNewJson2 = readFile("src/test/resources/StylishResult.txt");
+        assertEquals(actualNewJson2, resultNewJson2);
     }
 
     @Test
-    public void generateTestYaml2() throws Exception {
-        String filePath1 = pathToFullPath("file1.yml");
-        String filePath2 = pathToFullPath("file2.yml");
-
-        String actual = generate(filePath1, filePath2, "plain");
-        String expected2 = """
-                Property 'chars2' was updated. From [complex value] to false
-                Property 'checked' was updated. From false to true
-                Property 'default' was updated. From null to [complex value]
-                Property 'id' was updated. From 45 to null
-                Property 'key1' was removed
-                Property 'key2' was added with value: 'value2'
-                Property 'numbers2' was updated. From [complex value] to [complex value]
-                Property 'numbers3' was removed
-                Property 'numbers4' was added with value: [complex value]
-                Property 'obj1' was updated. From [complex value] to [complex value]
-                Property 'setting1' was updated. From 'Some value' to 'Another value'
-                Property 'setting2' was updated. From 200 to 300
-                Property 'setting3' was updated. From true to 'none'""";
-
-        System.out.println("Actual result for generateTestYaml2: " + actual);
-        Assertions.assertEquals(expected2, actual);
+    void generateJSONFormatStylish() throws IOException {
+        var actualNewJson = Differ.generate("src/test/resources/file1.json",
+                "src/test/resources/file2.json", "stylish");
+        var resultNewJson = readFile("src/test/resources/StylishResult.txt");
+        assertEquals(actualNewJson, resultNewJson);
     }
 
     @Test
-    public void generateTestJsonToJson() throws Exception {
-        String filePath1 = pathToFullPath("file1.json");
-        String filePath2 = pathToFullPath("file2.json");
-
-        String actual = generate(filePath1, filePath2, "json");
-        System.out.println("Actual result for generateTestJsonToJson: " + actual);
-
-        Assertions.assertEquals(expectedJsonFormat, actual);
+    void generateYAMLFormatDefault() throws IOException {
+        var actualYmlStylish2 = Differ.generate("src/test/resources/file3.yaml",
+                "src/test/resources/file4.yaml");
+        var resultYmlStylish2 = readFile("src/test/resources/stylishYmlResult.txt");
+        assertEquals(actualYmlStylish2, resultYmlStylish2);
     }
 
     @Test
-    public void generateTestJsonWithNullFile1() throws Exception {
-        final String expectedRemovedFormat = """
-            Property 'age' was removed
-            Property 'marriage' was removed
-            Property 'name' was removed
-            Property 'surname' was removed
-            Property 'www' was removed""";
-        String filePath1 = pathToFullPath("file1.json");
-        String filePath2 = pathToFullPath("emptyFile.yml");
-
-        String actual = generate(filePath1, filePath2, "plain");
-        System.out.println("Actual result for generateTestJsonWithNullFile1: " + actual);
-
-        Assertions.assertEquals(expectedRemovedFormat, actual);
+    void generateYAMLFormatStylish() throws IOException {
+        var actualYmlStylish = Differ.generate("src/test/resources/file3.yaml",
+                "src/test/resources/file4.yaml", "stylish");
+        var resultYmlStylish = readFile("src/test/resources/stylishYmlResult.txt");
+        assertEquals(actualYmlStylish, resultYmlStylish);
     }
 
     @Test
-    public void generateTestJsonWithNullFile2() throws Exception {
-        final String expected4 = """
-                Property 'age' was added with value: 18
-                Property 'marriage' was added with value: false
-                Property 'name' was added with value: 'Darya'
-                Property 'surname' was added with value: 'Selezneva'
-                Property 'www' was added with value: null""";
-        String filePath1 = pathToFullPath("emptyFile.yml");
-        String filePath2 = pathToFullPath("file1.json");
-
-        String actual = generate(filePath1, filePath2, "plain");
-        System.out.println("Actual result for generateTestJsonWithNullFile2: " + actual);
-
-        Assertions.assertEquals(expected4, actual);
+    void generateYAMLFormatPlain() throws IOException {
+        var actualYamlFormatPlain = Differ.generate("src/test/resources/file3.yaml",
+                "src/test/resources/file4.yaml", "plain");
+        var resultYamlFormatPlain = readFile("src/test/resources/plainResultYml.txt");
+        assertEquals(actualYamlFormatPlain, resultYamlFormatPlain);
     }
 
-    public static String pathToFullPath(String path) throws IllegalAccessException {
-        String path1 = "src/test/resources";
-        File file = new File(path1);
-        String absolutePath = file.getAbsolutePath();
-        if (!path.startsWith("/home")) {
-            return absolutePath + "/" + path;
-        }
-        throw new IllegalAccessException("Файл \"" + path + "\" не существует");
+    @Test
+    void generateYAMlFormatJSON() throws IOException {
+        var actualYmlJsonFormat = Differ.generate("src/test/resources/file3.yaml",
+                "src/test/resources/file4.yaml", "json");
+        var resultYmlJsonFormat = readFile("src/test/resources/resultForYmlJson.txt");
+        assertEquals(actualYmlJsonFormat, resultYmlJsonFormat);
+    }
+
+    public static String readFile(String filepath) throws IOException {
+        Path path = Paths.get(filepath);
+        String content = Files.readString(path);
+        return content;
     }
 }

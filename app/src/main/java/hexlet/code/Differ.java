@@ -1,30 +1,42 @@
 package hexlet.code;
 
+import hexlet.code.formatters.Formatter;
+
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 public class Differ {
-    public static String generate(String filePath1, String filePath2) throws Exception {
-        return generate(filePath1, filePath2, "stylish");
-    }
 
-    public static String generate(String filePath1, String filePath2, String format) throws Exception {
-        String format1 = getFileExtension(filePath1);
-        String format2 = getFileExtension(filePath2);
+    public static String generate(String filepath1, String filepath2, String format) throws IOException {
+        String content1 = readFile(filepath1);
+        String content2 = readFile(filepath2);
 
-        String fileContent1 = Files.readString(Paths.get(filePath1));
-        String fileContent2 = Files.readString(Paths.get(filePath2));
+        String fileFormat1 = getFileType(filepath1);
+        String fileFormat2 = getFileType(filepath2);
 
-        Map<String, Object> map1 = Parser.parse(fileContent1, format1);
-        Map<String, Object> map2 = Parser.parse(fileContent2, format2);
+        Map<String, Object> file1 = Parser.parse(content1, fileFormat1);
+        Map<String, Object> file2 = Parser.parse(content2, fileFormat2);
 
-        Map<String, Map<String, Object>> compareResult = Comparator.compare(map1, map2);
-
+        List<Map<String, Object>> compareResult = Comparator.compare(file1, file2);
         return Formatter.format(compareResult, format);
     }
 
-    private static String getFileExtension(String filePath) {
-        return filePath.substring(filePath.lastIndexOf(".") + 1).toLowerCase();
+    public static String generate(String filepath1, String filepath2) throws IOException {
+        return generate(filepath1, filepath2, "stylish");
+    }
+
+    public static String readFile(String filepath) throws IOException {
+        Path path = Paths.get(filepath);
+        String content = Files.readString(path);
+        return content;
+    }
+
+    private static String getFileType(String filepath) {
+        var type = filepath.substring(filepath.lastIndexOf(".") + 1);
+        return type;
     }
 }

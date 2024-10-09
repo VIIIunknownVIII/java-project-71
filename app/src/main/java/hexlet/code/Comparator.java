@@ -1,39 +1,44 @@
 package hexlet.code;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.TreeSet;
 
 public class Comparator {
 
-    public static Map<String, Map<String, Object>> compare(Map<String, Object> map1, Map<String, Object> map2) {
-        Set<String> allKeys = new TreeSet<>();
-        allKeys.addAll(map1.keySet());
-        allKeys.addAll(map2.keySet());
+    public static List<Map<String, Object>> compare(Map<String, Object> file1, Map<String, Object> file2) {
+        var keys = new TreeSet<>();
+        keys.addAll(file1.keySet());
+        keys.addAll(file2.keySet());
+        List<Map<String, Object>> result = new ArrayList<>();
 
-        Map<String, Map<String, Object>> compareResult = new LinkedHashMap<>();
-
-        for (String key : allKeys) {
-            Map<String, Object> resultData = new HashMap<>();
-            if (!map1.containsKey(key)) {
-                resultData.put("status", "added");
-                resultData.put("oldValue", null);
-                resultData.put("newValue", map2.get(key));
-            } else if (!map2.containsKey(key)) {
-                resultData.put("status", "removed");
-                resultData.put("oldValue", map1.get(key));
-                resultData.put("newValue", null);
-            } else if (Objects.equals(map1.get(key), map2.get(key))) {
-                resultData.put("status", "equal");
-                resultData.put("oldValue", map1.get(key));
-                resultData.put("newValue", map2.get(key));
-            } else {
-                resultData.put("status", "changed");
-                resultData.put("oldValue", map1.get(key));
-                resultData.put("newValue", map2.get(key));
+        for (var key : keys) {
+            Map<String, Object> line = new HashMap<>();
+            var keyStr = key.toString();
+            line.put("FIELD", key);
+            if (file1.containsKey(key.toString()) && !(file2.containsKey(key.toString()))) {
+                line.put("STATUS", "REMOVED");
+                line.put("OLD_VALUE", file1.get(key.toString()));
             }
-
-            compareResult.put(key, resultData);
+            if (!(file1.containsKey(key.toString())) && file2.containsKey(key.toString())) {
+                line.put("STATUS", "ADDED");
+                line.put("OLD_VALUE", file2.get(key.toString()));
+            }
+            if (file1.containsKey(key.toString()) && file2.containsKey(key.toString())) {
+                if (Objects.equals(file1.get(keyStr), (file2.get(keyStr)))) {
+                    line.put("STATUS", "SAME");
+                    line.put("OLD_VALUE", file1.get(key.toString()));
+                } else {
+                    line.put("STATUS", "CHANGED");
+                    line.put("OLD_VALUE", file1.get(keyStr));
+                    line.put("NEW_VALUE", file2.get(keyStr));
+                }
+            }
+            result.add(line);
         }
-
-        return compareResult;
+        return result;
     }
 }
