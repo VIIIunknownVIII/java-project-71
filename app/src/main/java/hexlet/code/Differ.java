@@ -22,6 +22,7 @@ public class Differ {
         Map<String, Object> file2 = Parser.parse(content2, fileFormat2);
 
         List<Map<String, Object>> compareResult = Comparator.compare(file1, file2);
+
         return Formatter.format(compareResult, format);
     }
 
@@ -39,6 +40,6 @@ public class Differ {
         if (lastDotIndex == -1 || lastDotIndex == filepath.length() - 1) {
             throw new IllegalArgumentException("File does not have a valid extension: " + filepath);
         }
-        return filepath.substring(lastDotIndex + 1);
+        return filepath.substring(lastDotIndex + 1).toLowerCase(); // Приводим к нижнему регистру
     }
 }
