@@ -31,30 +31,21 @@ compileJava {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
+    finalizedBy jacocoTestReport // Генерировать отчет после тестов
+}
 
-    jacoco {
-        enabled = true
-        destinationFile = layout.buildDirectory.file("jacoco/${name}.exec").get().asFile
-        includes = []
-        excludes = []
-        excludeClassLoaders = []
-        includeNoLocationClasses = false
-        sessionId = "db5cdb8223e5c365b028"
-        dumpOnExit = true
-        classDumpDir = null
-        output = JacocoTaskExtension.Output.FILE
-        address = "localhost"
-        port = 6300
-        jmx = false
-    }
+jacoco {
+    toolVersion = "0.8.7" // Убедитесь, что версия JaCoCo актуальна
 }
 
 jacocoTestReport {
     dependsOn test
     reports {
         xml.required = true
-        // html.enabled = true
+        html.enabled = true // Включите HTML-отчет для локальной проверки
+    }
+    afterEvaluate {
+        executionData fileTree(dir: "${buildDir}/jacoco", include: "*.exec")
     }
 }
 
