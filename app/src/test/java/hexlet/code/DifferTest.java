@@ -1,9 +1,15 @@
 package hexlet.code;
 
 import java.io.File;
-import static hexlet.code.Differ.generate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import static hexlet.code.Differ.generate;
+
+/**
+ * Unit tests for the Differ class.
+ * This class contains tests to verify the functionality of the
+ * generate method for different formats.
+ */
 
 public class DifferTest {
 
