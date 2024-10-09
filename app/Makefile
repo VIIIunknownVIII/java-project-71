@@ -4,7 +4,7 @@ FILE1 := ./path/to/file1
 FILE2 := ./path/to/file2
 
 setup:
-	./gradlew wrapper --gradle-version 8.3
+	./gradlew wrapper --gradle-version 8.5
 
 clean:
 	./gradlew clean

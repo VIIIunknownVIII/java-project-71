@@ -52,7 +52,7 @@ jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
     reports {
         xml.required = true
-        html.enabled = true
+     //   html.enabled = true
     }
 }
 
@@ -67,4 +67,14 @@ application {
 
 checkstyle {
     toolVersion '10.18.2'
+}
+
+tasks.withType(Test) {
+    reports {
+        html {
+            // You can customize the report settings here if needed
+            // For example, set destination file:
+            destination = file("$buildDir/reports/tests/test")
+        }
+    }
 }
