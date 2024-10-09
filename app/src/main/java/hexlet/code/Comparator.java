@@ -10,29 +10,32 @@ import java.util.TreeSet;
 public class Comparator {
 
     public static List<Map<String, Object>> compare(Map<String, Object> file1, Map<String, Object> file2) {
-        var keys = new TreeSet<>(file1.keySet());
+        var keys = new TreeSet<>();
+        keys.addAll(file1.keySet());
         keys.addAll(file2.keySet());
         List<Map<String, Object>> result = new ArrayList<>();
 
         for (var key : keys) {
             Map<String, Object> line = new HashMap<>();
+            var keyStr = key.toString();
             line.put("FIELD", key);
-            Object value1 = file1.get(key);
-            Object value2 = file2.get(key);
-
-            if (value1 != null && value2 == null) {
+            if (file1.containsKey(key.toString()) && !(file2.containsKey(key.toString()))) {
                 line.put("STATUS", "REMOVED");
-                line.put("OLD_VALUE", value1);
-            } else if (value1 == null && value2 != null) {
+                line.put("OLD_VALUE", file1.get(key.toString()));
+            }
+            if (!(file1.containsKey(key.toString())) && file2.containsKey(key.toString())) {
                 line.put("STATUS", "ADDED");
-                line.put("NEW_VALUE", value2);
-            } else if (Objects.equals(value1, value2)) {
-                line.put("STATUS", "SAME");
-                line.put("OLD_VALUE", value1);
-            } else {
-                line.put("STATUS", "CHANGED");
-                line.put("OLD_VALUE", value1);
-                line.put("NEW_VALUE", value2);
+                line.put("OLD_VALUE", file2.get(key.toString()));
+            }
+            if (file1.containsKey(key.toString()) && file2.containsKey(key.toString())) {
+                if (Objects.equals(file1.get(keyStr), (file2.get(keyStr)))) {
+                    line.put("STATUS", "SAME");
+                    line.put("OLD_VALUE", file1.get(key.toString()));
+                } else {
+                    line.put("STATUS", "CHANGED");
+                    line.put("OLD_VALUE", file1.get(keyStr));
+                    line.put("NEW_VALUE", file2.get(keyStr));
+                }
             }
             result.add(line);
         }
