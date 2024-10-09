@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'checkstyle'
-    id "jacoco"
+    id 'jacoco'
 }
 
 group = 'hexlet.code'
@@ -22,16 +22,17 @@ dependencies {
 }
 
 tasks.named('test') {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
 compileJava {
     options.release = 17
-//    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
 }
+
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport // report is always generated after tests run
+    finalizedBy jacocoTestReport
+
     jacoco {
         enabled = true
         destinationFile = layout.buildDirectory.file("jacoco/${name}.exec").get().asFile
@@ -48,21 +49,17 @@ test {
         jmx = false
     }
 }
+
 jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
+    dependsOn test
     reports {
         xml.required = true
-     //   html.enabled = true
+        // html.enabled = true
     }
-}
-
-test {
-    useJUnitPlatform()
 }
 
 application {
     mainClass = 'hexlet.code.App'
-    finalizedBy jacocoTestReport
 }
 
 checkstyle {
@@ -72,8 +69,6 @@ checkstyle {
 tasks.withType(Test) {
     reports {
         html {
-            // You can customize the report settings here if needed
-            // For example, set destination file:
             destination = file("$buildDir/reports/tests/test")
         }
     }
