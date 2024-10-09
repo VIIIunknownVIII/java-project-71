@@ -3,34 +3,25 @@ name: Java CI
 on: [push, pull_request]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '20'
-
-      - name: Build the project
-        uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v2
         with:
           arguments: build
           build-root-directory: app
-
-      - name: Run tests and generate JaCoCo report
-        run: ./app/gradlew -p app test jacocoTestReport
-
-      - name: Publish code coverage to Code Climate
+      - name: Publish code coverage
         uses: paambaati/codeclimate-action@v3.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+          JACOCO_SOURCE_PATH: app/src/main/java
         with:
-          coverageCommand: ./app/gradlew -p app jacocoTestReport
-          coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
-          prefix: app/src/main/java
-          debug: true
+          coverageCommand: make report
+          coverageLocations: ${{github.workspace}}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
