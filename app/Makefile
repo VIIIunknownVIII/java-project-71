@@ -22,7 +22,7 @@ test:
 	$(GRADLE_CMD) test
 
 report:
-	$(GRADLE_CMD) jacocoTestReport  # Эта цель должна быть здесь
+	./gradlew jacocoTestReport
 
 install:
 	$(GRADLE_CMD) install
