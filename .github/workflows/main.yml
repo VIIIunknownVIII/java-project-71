@@ -1,8 +1,12 @@
 name: custom-check
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   build:
@@ -19,14 +23,16 @@ jobs:
       - uses: gradle/gradle-build-action@v3
         with:
           gradle-version: 8.7
+      - run: ./gradlew build  # Добавлено для сборки проекта
       - run: ./gradlew checkstyleMain
       - run: ./gradlew checkstyleTest
       - run: ./gradlew test
+      - run: ./gradlew jacocoTestReport  # Убедитесь, что отчет создается
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
           JACOCO_SOURCE_PATH: app/src/main/java
         with:
           coverageCommand: make -C app report
-          coverageLocations: ${{github.workspace}}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+          coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
