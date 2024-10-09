@@ -22,13 +22,13 @@ test:
 	$(GRADLE_CMD) test
 
 report:
-	$(GRADLE_CMD) jacocoTestReport  # Убедитесь, что эта строка присутствует
+	$(GRADLE_CMD) jacocoTestReport  # Эта цель должна быть здесь
 
 install:
 	$(GRADLE_CMD) install
 
 run-dist:
-	./$(APP_DIR)/build/install/app/bin/app -h   Show help or main output
+	./$(APP_DIR)/build/install/app/bin/app -h  # Show help or main output
 
 build-run: build run
 
