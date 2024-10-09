@@ -15,8 +15,8 @@ public class Differ {
         String content1 = readFile(filepath1);
         String content2 = readFile(filepath2);
 
-        String fileFormat1 = extractFileExtension(filepath1);
-        String fileFormat2 = extractFileExtension(filepath2);
+        String fileFormat1 = getFileType(filepath1);
+        String fileFormat2 = getFileType(filepath2);
 
         Map<String, Object> file1 = Parser.parse(content1, fileFormat1);
         Map<String, Object> file2 = Parser.parse(content2, fileFormat2);
@@ -31,14 +31,12 @@ public class Differ {
 
     public static String readFile(String filepath) throws IOException {
         Path path = Paths.get(filepath);
-        return Files.readString(path);
+        String content = Files.readString(path);
+        return content;
     }
 
-    private static String extractFileExtension(String filepath) {
-        int lastDotIndex = filepath.lastIndexOf(".");
-        if (lastDotIndex == -1 || lastDotIndex == filepath.length() - 1) {
-            throw new IllegalArgumentException("File does not have a valid extension: " + filepath);
-        }
-        return filepath.substring(lastDotIndex + 1);
+    private static String getFileType(String filepath) {
+        var type = filepath.substring(filepath.lastIndexOf(".") + 1);
+        return type;
     }
 }
