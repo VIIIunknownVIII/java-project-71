@@ -1,35 +1,48 @@
 .DEFAULT_GOAL := build-run
 
+# Параметры для проекта
+PROJECT_DIR = app
+
 setup:
-	gradle wrapper --gradle-version 8.3
+	@echo "Setting up Gradle Wrapper..."
+	@./gradlew -p $(PROJECT_DIR) wrapper --gradle-version 8.3
 
 clean:
-	./app/gradlew -p app clean
+	@echo "Cleaning project..."
+	@./gradlew -p $(PROJECT_DIR) clean
 
 build:
-	./app/gradlew -p app clean build
+	@echo "Building project..."
+	@./gradlew -p $(PROJECT_DIR) build
 
 install:
-	./app/gradlew -p app clean install
+	@echo "Installing project..."
+	@./gradlew -p $(PROJECT_DIR) install
 
 run-dist:
-	@./app/build/install/app/bin/app -h
+	@echo "Running distribution..."
+	@./$(PROJECT_DIR)/build/install/$(PROJECT_DIR)/bin/$(PROJECT_DIR) -h
 
 run:
-	./app/gradlew -p app run
+	@echo "Running project..."
+	@./gradlew -p $(PROJECT_DIR) run
 
 test:
-	./app/gradlew -p app test
+	@echo "Running tests..."
+	@./gradlew -p $(PROJECT_DIR) test
 
 report:
-	./app/gradlew -p app jacocoTestReport
+	@echo "Generating report..."
+	@./gradlew -p $(PROJECT_DIR) jacocoTestReport
 
 lint:
-	./app/gradlew -p app checkstyleMain
+	@echo "Running lint checks..."
+	@./gradlew -p $(PROJECT_DIR) checkstyleMain
 
 check-deps:
-	./app/gradlew -p app dependencyUpdates -Drevision=release
+	@echo "Checking dependencies..."
+	@./gradlew -p $(PROJECT_DIR) dependencyUpdates -Drevision=release
 
 build-run: build run
 
-.PHONY: build
+.PHONY: build setup clean install run-dist run test report lint check-deps build-run
