@@ -35,5 +35,3 @@
     - [js-yaml](https://github.com/nodeca/js-yaml)
     - [lodash](https://lodash.com/)
     - [jest](https://jestjs.io/)
-
-## Setup
