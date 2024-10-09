@@ -8,4 +8,4 @@ test:
 	./gradlew test
 
 report:
-	./gradlew jacocoTestReport
+    ./app/gradlew -p app jacocoTestReport
