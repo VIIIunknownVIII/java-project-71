@@ -1,11 +1,11 @@
+run-dist:
+	./build/install/app/bin/app
+
 build:
-	make -C app build
+	./gradlew clean build
 
 test:
-	make -C app test
-
-checkstyleMain:
-	make -C app checkstyleMain
+	./gradlew test
 
 report:
-	make -C app report
+	./gradlew jacocoTestReport
