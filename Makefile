@@ -1,12 +1,11 @@
-run-dist:
-	make -C run-dist
 build:
-	make -C app build
+	./gradlew build
+
 clean:
-	make -C app clean
+	./gradlew clean
+
 test:
-	make -C app test
+	./gradlew test
+
 report:
-	make -C app report
-lint:
-	make -C app lint
+	./gradlew jacocoTestReport

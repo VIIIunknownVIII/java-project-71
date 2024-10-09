@@ -1,6 +1,5 @@
 name: Build
 
-
 on:
   - push
   - pull_request
@@ -20,12 +19,12 @@ jobs:
           gradle-version: 8.5
           arguments: build
           build-root-directory: app
-      - run:  cd app && ./gradlew checkstyleMain
-      - run:  cd app && ./gradlew test
+      - run: cd app && ./gradlew checkstyleMain
+      - run: cd app && ./gradlew test
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
           JACOCO_SOURCE_PATH: app/src/main/java
         with:
           coverageCommand: make report
