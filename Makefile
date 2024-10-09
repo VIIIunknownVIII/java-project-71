@@ -1,11 +1,11 @@
 run-dist:
-	./build/install/app/bin/app
+    ./build/install/app/bin/app
 
 build:
-	./gradlew clean build
+    ./gradlew clean build
 
 test:
-	./gradlew test
+    ./gradlew test
 
 report:
     ./app/gradlew -p app jacocoTestReport
