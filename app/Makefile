@@ -35,4 +35,4 @@ check-deps:
 
 build-run: build run
 
-.PHONY: build
+.PHONY: build clean install run test report lint check-deps build-run
