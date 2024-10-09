@@ -22,8 +22,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Run tests
-        run: mvn test
+        run: ./gradlew test
