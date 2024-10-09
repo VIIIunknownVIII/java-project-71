@@ -1,35 +1,35 @@
-.DEFAULT_GOAL := build-run
+name: Java CI
 
-setup:
-	gradle wrapper --gradle-version 8.3
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-clean:
-	./app/gradlew -p app clean
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
 
-build:
-	./app/gradlew -p app clean build
+      - name: Build with Gradle
+        run: ./gradlew build
 
-install:
-	./app/gradlew -p app clean install
+      - name: Run tests
+        run: ./gradlew test jacocoTestReport
 
-run-dist:
-	@./app/build/install/app/bin/app -h
-
-run:
-	./app/gradlew -p app run
-
-test:
-	./app/gradlew -p app test
-
-report:
-	./app/gradlew -p app jacocoTestReport
-
-lint:
-	./app/gradlew -p app checkstyleMain
-
-check-deps:
-	./app/gradlew -p app dependencyUpdates -Drevision=release
-
-build-run: build run
-
-.PHONY: build
+      - name: Publish code coverage to Code Climate
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: ./gradlew jacocoTestReport
+          coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml
+          prefix: app/src/main/java
+          debug: true
