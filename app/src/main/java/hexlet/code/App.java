@@ -18,7 +18,10 @@ public class App implements Callable<Integer> {
     @CommandLine.Option(names = {"-f", "--format"}, defaultValue = "stylish",
             description = "output format [default: ${DEFAULT-VALUE}]")
     private String format;
-
+    /**
+     * Выполняет основную логику приложения.
+     * Этот метод можно переопределить в наследуемых классах.
+     */
     @Override
     public Integer call() {
         try {
