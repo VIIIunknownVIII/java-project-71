@@ -68,7 +68,7 @@ checkstyle {
 tasks.withType(Test) {
     reports {
         html {
-            destination = file("$buildDir/reports/tests/test")
+            outputLocation = file("$buildDir/reports/tests/test")
         }
     }
 }
