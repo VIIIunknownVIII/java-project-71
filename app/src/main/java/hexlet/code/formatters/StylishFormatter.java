@@ -33,3 +33,4 @@ public class StylishFormatter {
         return result.toString();
     }
 }
+

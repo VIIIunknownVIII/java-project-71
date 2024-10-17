@@ -13,3 +13,4 @@ public class JSONFormatter {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(differences);
     }
 }
+

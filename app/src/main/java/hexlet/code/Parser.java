@@ -19,3 +19,4 @@ public class Parser {
         return YAML_MAPPER.readValue(yamlContent, new TypeReference<>() { });
     }
 }
+
