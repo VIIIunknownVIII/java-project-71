@@ -5,40 +5,42 @@ import java.util.Map;
 
 public class PlainFormatter {
 
-    public static String format(List<Map<String, Object>> differences) {
+    public static String formatPlain(List<Map<String, Object>> differences) {
         StringBuilder result = new StringBuilder();
-
-        for (Map<String, Object> diff : differences) {
-            String key = diff.get("key").toString();
-            String status = diff.get("status").toString();
+        for (int i = 0; i < differences.size(); i++) {
+            Map<String, Object> diff = differences.get(i);
+            String key = (String) diff.get("key");
+            String status = (String) diff.get("status");
+            String oldValue = formatValue(diff.get("oldValue"));
+            String newValue = formatValue(diff.get("newValue"));
 
             switch (status) {
-                case "added":
-                    result.append("Property '").append(key).append("' was added with value: ")
-                            .append(formatValue(diff.get("newValue"))).append("\n");
-                    break;
                 case "removed":
                     result.append("Property '").append(key).append("' was removed\n");
                     break;
+                case "added":
+                    result.append("Property '").append(key).append("' was added with value: ").append(newValue)
+                            .append(i < differences.size() - 1 ? "\n" : "");
+                    break;
                 case "updated":
-                    result.append("Property '").append(key)
-                            .append("' was updated. From ").append(formatValue(diff.get("oldValue")))
-                            .append(" to ").append(formatValue(diff.get("newValue"))).append("\n");
+                    result.append("Property '").append(key).append("' was updated. From ").append(oldValue)
+                            .append(" to ").append(newValue).append(i < differences.size() - 1 ? "\n" : "");
+                    break;
+                default:
                     break;
             }
         }
-
-        return result.toString().trim();
+        return result.toString();
     }
 
     private static String formatValue(Object value) {
         if (value instanceof Map || value instanceof List) {
             return "[complex value]";
-        } else if (value instanceof String) {
-            return "'" + value + "'";
-        } else {
-            return String.valueOf(value);
         }
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+        return String.valueOf(value);
     }
 }
 

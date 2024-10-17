@@ -20,7 +20,7 @@ public class Differ {
 
         List<Map<String, Object>> result = generateDifference(map1, map2);
 
-        return Formatter.format(result, formatName);
+        return Formatter.formatStyle(result, formatName);
     }
 
     public static List<Map<String, Object>> generateDifference(Map<String, Object> map1, Map<String, Object> map2) {

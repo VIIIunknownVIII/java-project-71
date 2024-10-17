@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Formatter {
-
-    public static String format(List<Map<String, Object>> differences, String formatName) throws Exception {
+    public static String formatStyle(
+            List<Map<String, Object>> differences, String formatName) throws Exception {
         switch (formatName) {
             case "stylish":
-                return StylishFormatter.format(differences);
+                return StylishFormatter.formatStylish(differences);
             case "plain":
-                return PlainFormatter.format(differences);
+                return PlainFormatter.formatPlain(differences);
             case "json":
-                return JSONFormatter.format(differences);
+                return JSONFormatter.formatJson(differences);
             default:
                 throw new IllegalArgumentException("Unsupported format: " + formatName);
         }
