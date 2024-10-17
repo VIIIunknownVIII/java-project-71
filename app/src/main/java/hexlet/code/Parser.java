@@ -2,26 +2,20 @@ package hexlet.code;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-import java.io.IOException;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import java.util.Map;
 
 public class Parser {
 
-    public static Map<String, Object> parse(String content, String format)
-            throws IOException {
-        switch (format) {
-            case "json":
-                ObjectMapper objectMapper = new ObjectMapper();
-                return objectMapper.readValue(content, new TypeReference<>() {
-                });
-            case "yaml", "yml":
-                ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                return mapper.readValue(content, Map.class);
-            default:
-                throw new RuntimeException("format not supported");
-        }
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
+    private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
+
+    public static Map<String, Object> parseJson(String jsonContent) throws Exception {
+        return JSON_MAPPER.readValue(jsonContent, new TypeReference<>() { });
+    }
+
+    public static Map<String, Object> parseYaml(String yamlContent) throws Exception {
+        return YAML_MAPPER.readValue(yamlContent, new TypeReference<>() { });
     }
 }

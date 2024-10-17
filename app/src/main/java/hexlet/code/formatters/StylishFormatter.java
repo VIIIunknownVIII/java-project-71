@@ -5,53 +5,31 @@ import java.util.Map;
 
 public class StylishFormatter {
 
-    public static String format(List<Map<String, Object>> compareResult) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
-        for (Map<String, Object> stringObjectMap : compareResult) {
-            String type = stringObjectMap.get("STATUS").toString();
-            String field = stringObjectMap.get("FIELD").toString();
-            var oldValue = stringObjectMap.get("OLD_VALUE");
-            switch (type) {
-                case "ADDED":
-                    sb.append("  + ");
-                    sb.append(field);
-                    sb.append(": ");
-                    sb.append(oldValue);
-                    sb.append("\n");
+    public static String format(List<Map<String, Object>> differences) {
+        StringBuilder result = new StringBuilder("{\n");
+
+        for (Map<String, Object> diff : differences) {
+            String key = diff.get("key").toString();
+            String status = diff.get("status").toString();
+
+            switch (status) {
+                case "added":
+                    result.append("  + ").append(key).append(": ").append(diff.get("newValue")).append("\n");
                     break;
-                case "REMOVED":
-                    sb.append("  - ");
-                    sb.append(field);
-                    sb.append(": ");
-                    sb.append(oldValue);
-                    sb.append("\n");
+                case "removed":
+                    result.append("  - ").append(key).append(": ").append(diff.get("oldValue")).append("\n");
                     break;
-                case "SAME":
-                    sb.append("    ");
-                    sb.append(field);
-                    sb.append(": ");
-                    sb.append(oldValue);
-                    sb.append("\n");
+                case "updated":
+                    result.append("  - ").append(key).append(": ").append(diff.get("oldValue")).append("\n");
+                    result.append("  + ").append(key).append(": ").append(diff.get("newValue")).append("\n");
                     break;
-                case "CHANGED":
-                    sb.append("  - ");
-                    sb.append(field);
-                    sb.append(": ");
-                    sb.append(oldValue);
-                    sb.append("\n");
-                    sb.append("  + ");
-                    sb.append(field);
-                    sb.append(": ");
-                    sb.append(stringObjectMap.get("NEW_VALUE"));
-                    sb.append("\n");
-                    break;
-                default:
+                case "unchanged":
+                    result.append("    ").append(key).append(": ").append(diff.get("oldValue")).append("\n");
                     break;
             }
-
         }
-        sb.append("}");
-        return sb.toString();
+
+        result.append("}");
+        return result.toString();
     }
 }

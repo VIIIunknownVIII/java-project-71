@@ -2,82 +2,117 @@ package hexlet.code;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+public class DifferTest {
 
-class DifferTest {
-    @Test
-    void generateJSONFormatPlain() throws IOException {
-        var actualPlainJson = Differ.generate("src/test/resources/file1.json",
-                "src/test/resources/file2.json", "plain");
-        var resultPlainJson = readFile("src/test/resources/plainResult.txt");
-        assertEquals(actualPlainJson, resultPlainJson);
+    private static Path getFixturePath(String fileName) {
+        return Paths.get("src", "test", "resources", "fixtures", fileName)
+                .toAbsolutePath().normalize();
+    }
+
+    private String readExpectedResult(String expectedFileName) throws Exception {
+        Path path = getFixturePath(expectedFileName);
+        return new String(Files.readAllBytes(path));
     }
 
     @Test
-    void generateJsonFormatJson() throws IOException {
-        var actualJsonFormat = Differ.generate("src/test/resources/file1.json",
-                "src/test/resources/file2.json", "json");
-        var resultJsonFormat = readFile("src/test/resources/resultJson.json");
-        assertEquals(actualJsonFormat, resultJsonFormat);
+    public void testGenerateNestedJson() throws Exception {
+        String filePath1 = getFixturePath("file3.json").toString();
+        String filePath2 = getFixturePath("file4.json").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2, "stylish");
+
+        String expected = readExpectedResult("expected/StylishResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
     @Test
-    void generate() throws IOException {
-        var actualNewJson2 = Differ.generate("src/test/resources/file1.json",
-                "src/test/resources/file2.json");
-        var resultNewJson2 = readFile("src/test/resources/StylishResult.txt");
-        assertEquals(actualNewJson2, resultNewJson2);
+    public void testGenerateNestedYml() throws Exception {
+        String filePath1 = getFixturePath("file3.yml").toString();
+        String filePath2 = getFixturePath("file4.yml").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2, "stylish");
+
+        String expected = readExpectedResult("expected/StylishResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
     @Test
-    void generateJSONFormatStylish() throws IOException {
-        var actualNewJson = Differ.generate("src/test/resources/file1.json",
-                "src/test/resources/file2.json", "stylish");
-        var resultNewJson = readFile("src/test/resources/StylishResult.txt");
-        assertEquals(actualNewJson, resultNewJson);
+    public void testGenerateJsonPlain() throws Exception {
+        String filePath1 = getFixturePath("file3.json").toString();
+        String filePath2 = getFixturePath("file4.json").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2, "plain");
+
+        String expected = readExpectedResult("expected/PlainResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
     @Test
-    void generateYAMLFormatDefault() throws IOException {
-        var actualYmlStylish2 = Differ.generate("src/test/resources/file3.yaml",
-                "src/test/resources/file4.yaml");
-        var resultYmlStylish2 = readFile("src/test/resources/stylishYmlResult.txt");
-        assertEquals(actualYmlStylish2, resultYmlStylish2);
+    public void testGenerateYmlPlain() throws Exception {
+        String filePath1 = getFixturePath("file3.yml").toString();
+        String filePath2 = getFixturePath("file4.yml").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2, "plain");
+
+        String expected = readExpectedResult("expected/PlainResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
     @Test
-    void generateYAMLFormatStylish() throws IOException {
-        var actualYmlStylish = Differ.generate("src/test/resources/file3.yaml",
-                "src/test/resources/file4.yaml", "stylish");
-        var resultYmlStylish = readFile("src/test/resources/stylishYmlResult.txt");
-        assertEquals(actualYmlStylish, resultYmlStylish);
+    public void testGenerateJson() throws Exception {
+        String filePath1 = getFixturePath("file3.json").toString();
+        String filePath2 = getFixturePath("file4.json").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2, "json");
+
+        String expected = readExpectedResult("expected/JsonResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
     @Test
-    void generateYAMLFormatPlain() throws IOException {
-        var actualYamlFormatPlain = Differ.generate("src/test/resources/file3.yaml",
-                "src/test/resources/file4.yaml", "plain");
-        var resultYamlFormatPlain = readFile("src/test/resources/plainResultYml.txt");
-        assertEquals(actualYamlFormatPlain, resultYamlFormatPlain);
+    public void testGenerateYml() throws Exception {
+        String filePath1 = getFixturePath("file3.yml").toString();
+        String filePath2 = getFixturePath("file4.yml").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2, "json");
+
+        String expected = readExpectedResult("expected/JsonResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
     @Test
-    void generateYAMlFormatJSON() throws IOException {
-        var actualYmlJsonFormat = Differ.generate("src/test/resources/file3.yaml",
-                "src/test/resources/file4.yaml", "json");
-        var resultYmlJsonFormat = readFile("src/test/resources/resultForYmlJson.txt");
-        assertEquals(actualYmlJsonFormat, resultYmlJsonFormat);
+    public void testGenerateWithoutFormatterJson() throws Exception {
+        String filePath1 = getFixturePath("file3.json").toString();
+        String filePath2 = getFixturePath("file4.json").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2); // Не указываем форматтер
+
+        String expected = readExpectedResult("expected/StylishResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 
-    public static String readFile(String filepath) throws IOException {
-        Path path = Paths.get(filepath);
-        String content = Files.readString(path);
-        return content;
+    @Test
+    public void testGenerateWithoutFormatterYml() throws Exception {
+        String filePath1 = getFixturePath("file3.yml").toString();
+        String filePath2 = getFixturePath("file4.yml").toString();
+
+        String formattedResult = Differ.generate(filePath1, filePath2); // Не указываем форматтер
+
+        String expected = readExpectedResult("expected/StylishResult.txt");
+
+        assertEquals(expected, formattedResult);
     }
 }

@@ -1,59 +1,43 @@
 package hexlet.code.formatters;
 
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class PlainFormatter {
 
-    public static String format(List<Map<String, Object>> compareResult) {
-        List<String> stringList = new ArrayList<>();
-        for (Map<String, Object> stringObjectMap : compareResult) {
-            String type = stringObjectMap.get("STATUS").toString();
-            String field = stringObjectMap.get("FIELD").toString();
-            var oldValue = stringObjectMap.get("OLD_VALUE");
-            String str = "Property \'" + field + "\' was ";
-            switch (type) {
-                case "ADDED":
-                    str = str + "added with value: " + formatStr(oldValue);
+    public static String format(List<Map<String, Object>> differences) {
+        StringBuilder result = new StringBuilder();
+
+        for (Map<String, Object> diff : differences) {
+            String key = diff.get("key").toString();
+            String status = diff.get("status").toString();
+
+            switch (status) {
+                case "added":
+                    result.append("Property '").append(key).append("' was added with value: ")
+                            .append(formatValue(diff.get("newValue"))).append("\n");
                     break;
-                case "REMOVED":
-                    str = str + "removed";
+                case "removed":
+                    result.append("Property '").append(key).append("' was removed\n");
                     break;
-                case "SAME":
-                    str = null;
+                case "updated":
+                    result.append("Property '").append(key)
+                            .append("' was updated. From ").append(formatValue(diff.get("oldValue")))
+                            .append(" to ").append(formatValue(diff.get("newValue"))).append("\n");
                     break;
-                case "CHANGED":
-                    var newValue = stringObjectMap.get("NEW_VALUE");
-                    str += "updated. From " + formatStr(oldValue) + " to " + formatStr(newValue);
-                    break;
-                default:
-                    break;
-            }
-            if (!Objects.isNull(str)) {
-                stringList.add(str);
             }
         }
-        return String.join("\n", stringList);
+
+        return result.toString().trim();
     }
 
-    public static String formatStr(Object value) {
-        var str = "";
-        if (Objects.isNull(value)) {
-            str = "null";
+    private static String formatValue(Object value) {
+        if (value instanceof Map || value instanceof List) {
+            return "[complex value]";
+        } else if (value instanceof String) {
+            return "'" + value + "'";
         } else {
-            if (value instanceof String) {
-                str += "'" + value + "'";
-            } else if (value instanceof ArrayList<?> || value instanceof LinkedHashMap<?, ?>) {
-                str += "[complex value]";
-            } else {
-                str += value;
-            }
+            return String.valueOf(value);
         }
-        return str;
     }
-
 }
