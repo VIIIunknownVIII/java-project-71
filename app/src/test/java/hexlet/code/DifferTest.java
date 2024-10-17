@@ -97,7 +97,7 @@ public class DifferTest {
         String filePath1 = getFixturePath("file3.json").toString();
         String filePath2 = getFixturePath("file4.json").toString();
 
-        String formattedResult = Differ.generate(filePath1, filePath2); // Не указываем форматтер
+        String formattedResult = Differ.generate(filePath1, filePath2);
 
         String expected = readExpectedResult("expected/StylishResult.txt");
 
@@ -109,7 +109,7 @@ public class DifferTest {
         String filePath1 = getFixturePath("file3.yml").toString();
         String filePath2 = getFixturePath("file4.yml").toString();
 
-        String formattedResult = Differ.generate(filePath1, filePath2); // Не указываем форматтер
+        String formattedResult = Differ.generate(filePath1, filePath2);
 
         String expected = readExpectedResult("expected/StylishResult.txt");
 
